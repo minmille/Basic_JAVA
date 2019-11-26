@@ -35,7 +35,6 @@ public class IfElse02 {
 			grade = "A";
 		} else if (score >= 86 && score < 89) {
 			grade = "B+";
-
 		} else if (score >= 80 && score <= 85) {
 			grade = "B";
 		} else if (score >= 76 && score < 79) {
