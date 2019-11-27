@@ -2,7 +2,7 @@ package chapter04;
 
 import java.util.Scanner;
 
-public class IfElse02 {
+public class IfElse02_OtherWay {
 	public static void main(String[] args) {
 		// 학점 계산 프로그램
 		Scanner sc = new Scanner(System.in);
@@ -29,30 +29,22 @@ public class IfElse02 {
 		// 중첩 if 사용 할 것
 
 		String grade = ""; // 학점 등급
-		if (score >= 90 && score <= 100) {
-			if(score >= 96) {
-				grade = "A+";
-			} else {
-				grade = "A";
-			}
-		} else if (score >= 80 && score < 89) {
-			if(score >= 86) {
-				grade = "B+";
-			} else {
-				grade = "B";
-			}
-		} else if (score >= 70 && score < 79) {
-			if(score >= 76) {
-				grade = "C+";
-			} else {
-				grade = "C";
-			}
-		} else if (score >= 60 && score <= 69) {
-			if(score >= 66) {
-				grade = "D+";
-			} else {
-				grade = "D";
-			}
+		if (score >= 96 && score <= 100) {
+			grade = "A+";
+		} else if (score >= 90 && score <= 95) {
+			grade = "A";
+		} else if (score >= 86 && score < 89) {
+			grade = "B+";
+		} else if (score >= 80 && score <= 85) {
+			grade = "B";
+		} else if (score >= 76 && score < 79) {
+			grade = "C+";
+		} else if (score >= 70 && score <= 75) {
+			grade = "C";
+		} else if (score >= 66 && score < 69) {
+			grade = "D+";
+		} else if (score >= 60 && score <= 65) {
+			grade = "D";
 		} else if (score < 60 && score >= 0) {
 			grade = "F";
 		}
