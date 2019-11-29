@@ -118,7 +118,8 @@ public class FaFaMain {
 			sc.nextLine(); // 한줄개행 받는 부분
 			String order = sc.nextLine();
 			// 문자열 받기
-	
+			// order.toUpperCase();// 대문자로 변환
+			String smallAns = order.toLowerCase(); // 소문자로 변환
 			if (order.equals("y")) {
 				// 결제금액 입력하는 코드
 	
