@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import problem.common.DBManager;
+
 public class MemberDAO {
 
 	Connection conn; // 객체자료형은 자바가 기본적으로 null로 초기화한다.
@@ -42,7 +44,9 @@ public class MemberDAO {
 		try {
 			System.out.println(mDTO.toString());
 			conn = DBManager.getConnection(); // 연결정보가 conn에 들어간다.
-			String sql = "UPDATE tbl_enter " + "SET aname = ?, " + "major = ?, " + "groupyn = ?, " + "groupnm = ?, "
+			String sql = "UPDATE tbl_enter " 
+					+ "SET aname = ?, " + "major = ?, " 
+					+ "groupyn = ?, " + "groupnm = ?, "
 					+ "sal = ? " + "WHERE ano = ?";
 			pstmt = conn.prepareStatement(sql); // pstmt에 sql문을 담음
 			pstmt.setString(1, mDTO.getAname());
