@@ -1,6 +1,5 @@
 package problem.DDBoard;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DDBoardMain {
@@ -54,26 +53,57 @@ public class DDBoardMain {
 				System.out.println("수정할 게시글 번호를 쓰세요");
 				System.out.print("번호 >> ");
 				int bno = sc.nextInt();
-				BoardDTO bDto = new BoardDTO(bno);
+				System.out.print("제목 >> ");
+				sc.nextLine();
+				String title = sc.nextLine();
+				System.out.print("내용 >> ");
+				String content = sc.nextLine();
+				System.out.print("작성자 >> ");
+				String writer = sc.nextLine();
+				BoardDTO bDto = new BoardDTO(bno,title,content,writer);
 				bDao.boardUpdate(bDto);
 						
 				
 			} else if(code == 3) {
-				
+				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
+				System.out.println("삭제할 게시글 번호를 쓰세요");
+				System.out.println("번호 >> ");
+				int bno = sc.nextInt();
+				System.out.println("Yes(1) or No(2) >> ");
+				int selectNum = sc.nextInt();
+				while(true) {
+					
+					if (selectNum == 1 ) {
+						bDao.boardDelete(selectNum);
+					} else if(selectNum == 2) {
+						break;
+					} else {
+						continue;
+					}
+				}
 			} else if(code == 4) {
 				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
 				System.out.println("게시글 조회");
 				bDao.boardSelect();
 			} else if(code == 5) {
 				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
-				System.out.println("게시글 제목 검색");
-				System.out.print("제목 >>");
+				System.out.println("검색할 키워드 입력 >> ");
+				System.out.print("검색 >>");
 				sc.nextLine();
-				String title = sc.nextLine();
-				bDao.boardSearch(title);
+				String keyword = sc.nextLine();
+				bDao.boardSearch(keyword);
+				
 			} else if(code == 6) {
+				System.out.println("조회순으로 정렬됩니다.");
+				bDao.boardSort();
 				
 			} else if(code == 7) {
+				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
+				System.out.println("보고싶은 게시글 번호를 입력하세요");
+				System.out.print("보고싶은 게시글 번호 >> ");
+				int bno = sc.nextInt();
+				// System.out.print(bno); bno 정상 입력 확인용
+				bDao.boardView(bno);
 				
 			} else if(code == 8) {
 				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
