@@ -43,12 +43,11 @@ public class DDBoardMain {
 				String title = sc.nextLine();
 				System.out.print("내용 >> ");
 				String  content = sc.nextLine();
-				System.out.println("작성자 >> ");
+				System.out.print("작성자 >> ");
 				String writer = sc.nextLine();
 				BoardDTO bDto = new BoardDTO(title, content, writer);
 				bDao.boardInsert(bDto);
 			} else if(code == 2) {
-				bDao.boardSelect();
 				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
 				System.out.println("수정할 게시글 번호를 쓰세요");
 				System.out.print("번호 >> ");
@@ -60,27 +59,23 @@ public class DDBoardMain {
 				String content = sc.nextLine();
 				System.out.print("작성자 >> ");
 				String writer = sc.nextLine();
-				BoardDTO bDto = new BoardDTO(bno,title,content,writer);
+				BoardDTO bDto = new BoardDTO(bno, title, content, writer);
 				bDao.boardUpdate(bDto);
-						
-				
 			} else if(code == 3) {
 				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
 				System.out.println("삭제할 게시글 번호를 쓰세요");
-				System.out.println("번호 >> ");
+				System.out.print("번호 >> ");
 				int bno = sc.nextInt();
-				System.out.println("Yes(1) or No(2) >> ");
-				int selectNum = sc.nextInt();
-				while(true) {
+				System.out.print("Yes(1) or No(2) >> ");
+				int selectNum = sc.nextInt(); //실행 or 미실행
 					
 					if (selectNum == 1 ) {
-						bDao.boardDelete(selectNum);
+						bDao.boardDelete(bno);
 					} else if(selectNum == 2) {
 						break;
 					} else {
 						continue;
 					}
-				}
 			} else if(code == 4) {
 				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
 				System.out.println("게시글 조회");

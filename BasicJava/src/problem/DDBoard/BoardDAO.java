@@ -19,16 +19,20 @@ public class BoardDAO {
 	public void boardInsert(BoardDTO bDto) {
 		try {
 			conn = DBManager.getConnection();
-			String sql = "INSERT INTO tbl_board(bno, title, content, writer) VALUES(seq_board.NEXTVAL, ?, ?, ?)";
+			String sql = "INSERT INTO tbl_board(bno, title, content, writer)" + 
+						 " VALUES(seq_board.NEXTVAL, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, bDto.getTitle());
-			pstmt.setString(2, bDto.getTitle());
-			pstmt.setString(3, bDto.getContent());
-			pstmt.setString(4, bDto.getWriter());
-			
+			pstmt.setString(2, bDto.getContent());
+			pstmt.setString(3, bDto.getWriter());
+			 
 			int result = pstmt.executeUpdate();
 			if(result > 0) {
 				System.out.println(bDto.getTitle() + "을 등록하였습니다.");
+				String com = "COMMIT"; // 커밋
+				pstmt = conn.prepareStatement(com); // 커밋 실행
+				conn.close(); // 데이터베이스와 연결 끊음
+				pstmt.close(); // 데이터베이스와 연결 끊음
 			} else {
 				System.out.println("게시글 등록 실패");
 			}
@@ -41,9 +45,9 @@ public class BoardDAO {
 	public void boardUpdate(BoardDTO bDto) {
 		try {
 			conn = DBManager.getConnection();
-			String sql = "UPDATE tbl_board " 
-					+ "SET title = ?, content = ?, writer = ? "
-					+ "WHERE bno = ?";
+			String sql = "UPDATE tbl_board " +
+					     "SET title = ?, content = ?, writer = ? " + 
+					     "WHERE bno = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, bDto.getTitle());
 			pstmt.setString(2, bDto.getContent());
@@ -52,7 +56,12 @@ public class BoardDAO {
 			int result = pstmt.executeUpdate();
 			
 			if(result > 0) {
+				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
 				System.out.println("게시글 " + bDto.getBno() + " 번을 수정하였습니다.");
+				String com = "COMMIT";
+				pstmt = conn.prepareStatement(com);
+				conn.close();
+				pstmt.close();
 			} else {
 				System.out.println("게시글 수정 실패");
 			}
@@ -70,6 +79,10 @@ public class BoardDAO {
 						 "WHERE bno = ?";
 			pstmt = conn.prepareStatement(sql);
 					
+			String com = "COMMIT";
+			pstmt = conn.prepareStatement(com);
+			conn.close();
+			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -91,8 +104,9 @@ public class BoardDAO {
 				String title = rs.getString("title");
 				String content = rs.getString("content");
 				String writer = rs.getString("writer");
+				int viewcnt = rs.getInt("viewcnt");
 				Date regdate = rs.getDate("regdate");
-				BoardDTO bDto = new BoardDTO(bno, title, content, writer, regdate); // bDto 가방에 한줄로 담는다.
+				bDto = new BoardDTO(bno, title, content, writer, viewcnt, regdate); // bDto 가방에 한줄로 담는다.
 				list.add(bDto); // bDto가 ArrayList에 반복하면서 담긴다.
 			}
 			System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
@@ -101,6 +115,9 @@ public class BoardDAO {
 				System.out.println(line.toString());
 			}
 			System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
+			
+			conn.close();
+			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -134,11 +151,10 @@ public class BoardDAO {
 			System.out.println("번호 \t 제목 \t 내용 \t 작성자 \t 작성일자");
 			for (BoardDTO line : list) {
 				System.out.println(line.toString());
+				System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
 			}
-			System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
-			for (BoardDTO line : list) {
-				System.out.println(line.toString());
-			}
+			conn.close();
+			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -180,7 +196,9 @@ public class BoardDAO {
 			System.out.println("▦▦ 내용 " + bDto.getContent() + " ▦▦ ");
 			System.out.println("▦▦ 조회수 " + bDto.getViewcnt() + " ▦▦ ");
 			System.out.println("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦");
-			
+		
+			conn.close();
+			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -193,8 +211,7 @@ public class BoardDAO {
 			String sql = "SELECT * FROM tbl_board " + 
 						 "ORDER BY viewcnt DESC";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.executeQuery();
-			
+			rs = pstmt.executeQuery();
 			
 			list.clear();
 			while (rs.next()) {
@@ -210,6 +227,8 @@ public class BoardDAO {
 			for (BoardDTO line : list) {
 				System.out.println(line.toString());
 			}
+			conn.close();
+			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
