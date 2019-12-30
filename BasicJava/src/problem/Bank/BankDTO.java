@@ -19,6 +19,39 @@ public class BankDTO {
 		this.money = money;
 		this.regdate = regdate;
 	}
+	
+	public BankDTO(String bname, String pw, int money) {
+		super();
+		this.bname = bname;
+		this.pw = pw;
+		this.money = money;
+	}
+
+	
+	public BankDTO(String bname, Date regdate) {
+		super();
+		this.bname = bname;
+		this.regdate = regdate;
+	}
+
+	public BankDTO(int bno, String bname, Date regdate) {
+		super();
+		this.bno = bno;
+		this.bname = bname;
+		this.regdate = regdate;
+	}
+
+	
+	public BankDTO(String bname, int money) {
+		super();
+		this.bname = bname;
+		this.money = money;
+	}
+
+	public BankDTO(String bname) {
+		super();
+		this.bname = bname;
+	}
 
 	public int getBno() {
 		return bno;
