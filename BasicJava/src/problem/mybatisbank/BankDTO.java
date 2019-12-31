@@ -43,6 +43,7 @@ public class BankDTO {
 		this.bno = bno;
 	}
 
+	
 	public int getBno() {
 		return bno;
 	}
@@ -85,8 +86,7 @@ public class BankDTO {
 
 	@Override
 	public String toString() {
-		return "BankDTO [bno=" + bno + ", bname=" + bname + ", pw=" + pw + ", money=" + money + ", regdate=" + regdate
-				+ "]";
+		return bno + "\t" + bname; 
 	}
 	
 	

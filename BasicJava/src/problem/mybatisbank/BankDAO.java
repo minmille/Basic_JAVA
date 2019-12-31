@@ -1,5 +1,6 @@
 package problem.mybatisbank;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -37,18 +38,17 @@ public class BankDAO {
 
 	public void updatePlusBank(int bno, int money) {
 		sqlSession = sqlSessionFactory.openSession(true); // true가 들어가면 오토 커밋을 한다.
+		// 제네릭에는 레퍼런트 타입만 들어갈 수 있으므로 wrapper 사용 (Integer)
+		HashMap<String, Integer> map = new HashMap<>(); 
+		map.put("bno", bno);
+		map.put("money", money);
+		map.put("flag", 1);
 		try {
-			BankDTO bDto = new BankDTO(bno, money);
-			result = sqlSession.insert("updatePlusBank", bDto); // 컴마 뒤에는 값을 하나밖에 담지 못하므로 가방에 담아서 넣는다.
+			result = sqlSession.update("changeMoney", map); // 컴마 뒤에는 값을 하나밖에 담지 못하므로 가방에 담아서 넣는다.
 			if (result > 0) {
-				System.out.println(bno + "님의 계좌에 " + money + "원을 입금하였습니다.");
-				
-				/*
-				* list2 = sqlSession.selectList("accountMoneyBank");
-				* for (BankDTO line : list2) {
-				* 	System.out.println(line.toString());
-				*}
-				*/
+				System.out.println(bno + "계좌에 " + money + "원을 입금하였습니다.");
+				System.out.println("계좌 잔액은 " + balanceMoney(bno) + "원 입니다."); 
+				//System.out.println("계좌의 총 잔액은 " + balanceMoney(bno) + "원 입니다.");
 			} else {
 				System.out.println(bno + "계좌 입금에 실패하였습니다. 관리자에게 문의해 주세요.");
 			}
@@ -57,7 +57,30 @@ public class BankDAO {
 		Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+
+		}
+	}
+
+	public void updateMinusBank(int bno, int money) {
+		sqlSession = sqlSessionFactory.openSession(true); // true가 들어가면 오토 커밋을 한다.
+		try {
+			HashMap<String, Integer> map = new HashMap<>();
+			map.put("bno", bno);
+			map.put("money", money);
+			map.put("flag", 0);
+			result = sqlSession.insert("changeMoney", map); // 컴마 뒤에는 값을 하나밖에 담지 못하므로 가방에 담아서 넣는다.
+			if (result > 0) {
+				System.out.println(bno + "님의 계좌에서 " + money + "원을 출금하였습니다.");
+				System.out.println("계좌 잔액은 " + balanceMoney(bno) + "원 입니다.");
+			} else {
+				System.out.println(bno + "계좌의 출금이 실패하였습니다. 관리자에게 문의해 주세요.");
+			}
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+		} finally {
+
 		}
 	}
 
@@ -82,11 +105,14 @@ public class BankDAO {
 
 	}
 
-	public void selectAccout(int bno, String pw) {
+	public void selectAccount(int bno, String pw) {
 		sqlSession = sqlSessionFactory.openSession(true);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("bno",bno);
+		map.put("pw", pw);
 		try {
 			BankDTO bDto = new BankDTO(bno, pw);
-			bDto = sqlSession.selectOne("selectAccount", bDto); // 결과는 1건이므로 바로 담는다.
+			bDto = sqlSession.selectOne("selectAccount", map); // 결과는 1건이므로 바로 담는다.
 
 			if (bDto == null) {
 				System.out.println("존재하지 않는 계좌번호이거나 암호가 틀렸습니다.");
@@ -103,5 +129,57 @@ public class BankDAO {
 		} finally {
 			sqlSession.close();
 		}
+	}
+	
+	public void deleteAccount(int bno, String pw) {
+		sqlSession = sqlSessionFactory.openSession(true);
+		HashMap<String, Object> map = new HashMap<>();// DTO는 오버로딩 시 겹치는 경우가 많이 있으므로 HashMap을 쓴다. 
+		map.put("bno", bno); // 반드시 키로만 데이터를 불러올 수 있다.
+		map.put("pw", pw);
+		try {
+			result = sqlSession.delete("deleteAccount", map);
+			if(result >0) {
+				System.out.println(bno + " 계좌를 해지하였습니다.");
+			} else {
+				System.out.println("계좌해지에 실패하였습니다. 관리자에게 문의해 주세요.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public int balanceMoney(int bno) {
+		sqlSession = sqlSessionFactory.openSession();
+		int money = 0;
+		try {
+			money = sqlSession.selectOne("balanceMoney", bno);
+			// System.out.println("계좌의 총 잔액은 "+ money + " 원 입니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+		return money;
+	}
+	
+	public boolean checkUser(int bno, String pw) {
+		boolean flag = false;
+		sqlSession = sqlSessionFactory.openSession();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("bno",bno);
+		map.put("pw", pw);
+		try {
+			result = sqlSession.selectOne("checkUser", map);
+			if(result > 0) {
+				flag = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+		return flag;
 	}
 }
