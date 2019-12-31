@@ -75,6 +75,7 @@ public class BankMain {
 					} else {
 						// 출금
 						bDao.updateMinusBank(bno, money);
+						break;
 					}
 					}
 				} else {
